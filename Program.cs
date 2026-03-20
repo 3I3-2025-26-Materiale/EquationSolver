@@ -35,7 +35,7 @@ namespace EquationSolver
             float[,] coefficienti = new float[nEquazioni, nIncognite];
             float[] terminiNoti = new float[nEquazioni];
 
-      
+            float[] soluzioni = new float[nIncognite];
 
             bool inserimentoRiuscito = inserisciSistemaEquazioni(coefficienti, terminiNoti);
             if (inserimentoRiuscito)
@@ -43,6 +43,16 @@ namespace EquationSolver
                 Console.WriteLine();
                 Console.WriteLine("Hai inserito il seguente sistema di equazioni:");
                 stampaSistemaEquazioni(coefficienti, terminiNoti);
+
+                // chiedere all'utente se il sistema gli piace o no: in caso negativo si reinserisce.
+
+                soluzioni = risolvi(coefficienti, terminiNoti);
+
+                Console.WriteLine("Soluzione del sistema:");
+                for (int i = 0; i < soluzioni.Length; i++)
+                {
+                    Console.WriteLine($"x{i + 1} = {soluzioni[i]}");
+                }
             }
             else
             {
@@ -112,6 +122,24 @@ namespace EquationSolver
 
                 Console.WriteLine(equazione);
             }
+        }
+
+        static float[] risolvi(float[,] coefficienti, float[] terminiNoti)
+        {
+            // restituisce l'array delle soluzioni calcolate con Cramer
+            return null;
+        }
+
+        static float[,] sostituisciColonna(float[,] matrice, float[] colonnaNuova, int indiceColonnaDaSostituire)
+        {
+            // restituisce una NUOVA matrice con la colonna sostituita
+            return null;
+        }
+
+        static float calcolaDeterminante(float[,] matrice)
+        {
+            // restituisce il determinante della matrice
+            return 0f;
         }
     }
 }

@@ -35,18 +35,26 @@ namespace EquationSolver
             float[,] coefficienti = new float[nEquazioni, nIncognite];
             float[] terminiNoti = new float[nEquazioni];
 
-            inserisciSistemaEquazioni(coefficienti, terminiNoti);
-
-            Console.WriteLine();
-            Console.WriteLine("Hai inserito il seguente sistema di equazioni:");
-            stampaSistemaEquazioni(coefficienti, terminiNoti);
+            bool inserimentoRiuscito = inserisciSistemaEquazioni(coefficienti, terminiNoti);
+            if (inserimentoRiuscito)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Hai inserito il seguente sistema di equazioni:");
+                stampaSistemaEquazioni(coefficienti, terminiNoti);
+            }
+            else
+            {
+                Console.WriteLine("ERRORE DI PROGRAMMAZIONE: Le matrici non hanno una dimensione coerente.");
+            }
+            
         }
 
-        static void inserisciSistemaEquazioni(float[,] coefficienti, float[] terminiNoti)
+        static bool inserisciSistemaEquazioni(float[,] coefficienti, float[] terminiNoti)
         {
             if (coefficienti.GetLength(0) != terminiNoti.Length)
-                return; // le matrici non hanno delle dimensioni coerenti
+                return false; // le matrici non hanno delle dimensioni coerenti
 
+            return true;
             // riempimento delle matrici tramite input da console.
         }
 

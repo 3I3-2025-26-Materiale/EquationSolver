@@ -10,6 +10,52 @@ namespace EquationSolver
     {
         static void Main(string[] args)
         {
+            // Inserire il numero di incognite
+            Console.Write("Inserire il numero di incognite: ");
+            int nIncognite = int.Parse(Console.ReadLine()); // N
+
+            // Inserire il numero di equazioni
+            // Console.Write("Inserire il numero di equazioni: ");
+            // int nEquazioni = int.Parse(Console.ReadLine()); // M
+            int nEquazioni = nIncognite; // M
+
+            // Il sistema di equazioni verrà rappresentato tramite
+            // un prodotto matriciale A*X = B
+            // Dove:
+            // - A è la matrice dei coefficienti
+            // - X è il vettore colonna delle incognite
+            // - B è il vettore colonna dei termini noti
+            // I vettori colonna saranno rappresentati tramite normali array.
+
+            // A e B contengono coefficienti a scelta dell'utente, quindi sono
+            // rappresentati come variabili. X, cioè l'array delle incognite,
+            // non è a scelta dell'utente, quindi non ha una variabile associata,
+            // ma sarà considerato direttamente come parte dell'algoritmo.
+
+            float[,] coefficienti = new float[nEquazioni, nIncognite];
+            float[] terminiNoti = new float[nEquazioni];
+
+            inserisciSistemaEquazioni(coefficienti, terminiNoti);
+
+            Console.WriteLine();
+            Console.WriteLine("Hai inserito il seguente sistema di equazioni:");
+            stampaSistemaEquazioni(coefficienti, terminiNoti);
+        }
+
+        static void inserisciSistemaEquazioni(float[,] coefficienti, float[] terminiNoti)
+        {
+            if (coefficienti.GetLength(0) != terminiNoti.Length)
+                return; // le matrici non hanno delle dimensioni coerenti
+
+            // riempimento delle matrici tramite input da console.
+        }
+
+        static void stampaSistemaEquazioni(float[,] coefficienti, float[] terminiNoti)
+        {
+            if (coefficienti.GetLength(0) != terminiNoti.Length)
+                return; // le matrici non hanno delle dimensioni coerenti
+
+            // stampa del sistema di equazioni.
         }
     }
 }

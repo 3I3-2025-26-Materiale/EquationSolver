@@ -35,6 +35,8 @@ namespace EquationSolver
             float[,] coefficienti = new float[nEquazioni, nIncognite];
             float[] terminiNoti = new float[nEquazioni];
 
+      
+
             bool inserimentoRiuscito = inserisciSistemaEquazioni(coefficienti, terminiNoti);
             if (inserimentoRiuscito)
             {
@@ -46,7 +48,8 @@ namespace EquationSolver
             {
                 Console.WriteLine("ERRORE DI PROGRAMMAZIONE: Le matrici non hanno una dimensione coerente.");
             }
-            
+
+            Console.ReadLine();
         }
 
         static bool inserisciSistemaEquazioni(float[,] coefficienti, float[] terminiNoti)
@@ -54,8 +57,30 @@ namespace EquationSolver
             if (coefficienti.GetLength(0) != terminiNoti.Length)
                 return false; // le matrici non hanno delle dimensioni coerenti
 
-            return true;
+            int nEquazioni = coefficienti.GetLength(0);
+            int nIncognite = coefficienti.GetLength(1);
+
             // riempimento delle matrici tramite input da console.
+            for (int indiceEquazione = 0; indiceEquazione < nEquazioni; indiceEquazione++)
+            {
+                Console.WriteLine($"Inserimento dell'equazione {indiceEquazione + 1}");
+
+                // Inserire i coefficienti delle incognite
+                for (int indiceIncognita = 0; indiceIncognita < nIncognite; indiceIncognita++)
+                {
+                    Console.Write($"Inserire il coefficiente di x{indiceIncognita + 1}: ");
+                    float coefficiente = float.Parse(Console.ReadLine());
+                    coefficienti[indiceEquazione, indiceIncognita] = coefficiente;
+                }
+
+                Console.Write("Inserire il termine noto: ");
+                float termineNoto = float.Parse(Console.ReadLine());
+                terminiNoti[indiceEquazione] = termineNoto;
+
+                Console.WriteLine();
+            }
+
+            return true;
         }
 
         static void stampaSistemaEquazioni(float[,] coefficienti, float[] terminiNoti)
@@ -63,7 +88,30 @@ namespace EquationSolver
             if (coefficienti.GetLength(0) != terminiNoti.Length)
                 return; // le matrici non hanno delle dimensioni coerenti
 
-            // stampa del sistema di equazioni.
+            int nEquazioni = coefficienti.GetLength(0);
+            int nIncognite = coefficienti.GetLength(1);
+
+            for (int indiceEquazione = 0; indiceEquazione < nEquazioni; indiceEquazione++)
+            {
+                string equazione = "";
+                for (int indiceIncognita = 0; indiceIncognita < nIncognite; indiceIncognita++)
+                {
+                    float coefficiente = coefficienti[indiceEquazione, indiceIncognita];
+
+                    string segno = "";
+                    if (coefficiente > 0 && indiceIncognita > 0)
+                        segno = "+";
+                    // se invece il coefficiente è negativo,
+                    // il segno - viene aggiunto direttamente dalla conversione in stringa
+                    // del coefficiente stess.
+
+                    equazione += $"{segno}{coefficiente}x{indiceIncognita+1} ";
+                }
+
+                equazione += "= " + terminiNoti[indiceEquazione];
+
+                Console.WriteLine(equazione);
+            }
         }
     }
 }

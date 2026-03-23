@@ -44,10 +44,12 @@ namespace EquationSolver
                 Console.WriteLine("Hai inserito il seguente sistema di equazioni:");
                 stampaSistemaEquazioni(coefficienti, terminiNoti);
 
-                // chiedere all'utente se il sistema gli piace o no: in caso negativo si reinserisce.
+                // TODO: chiedere all'utente se il sistema gli piace o no: in caso negativo si reinserisce.
 
                 soluzioni = risolvi(coefficienti, terminiNoti);
 
+                // TODO: gestire il caso in cui il sistema non è risolvibile
+                // (es.: array soluzioni vuoto)
                 Console.WriteLine("Soluzione del sistema:");
                 for (int i = 0; i < soluzioni.Length; i++)
                 {
@@ -113,7 +115,9 @@ namespace EquationSolver
                         segno = "+";
                     // se invece il coefficiente è negativo,
                     // il segno - viene aggiunto direttamente dalla conversione in stringa
-                    // del coefficiente stess.
+                    // del coefficiente stesso.
+
+                    // TODO: gestire i coefficienti 0 e 1 per una stampa pulita
 
                     equazione += $"{segno}{coefficiente}x{indiceIncognita+1} ";
                 }
@@ -126,19 +130,29 @@ namespace EquationSolver
 
         static float[] risolvi(float[,] coefficienti, float[] terminiNoti)
         {
-            // restituisce l'array delle soluzioni calcolate con Cramer
+            // TODO: restituisce l'array delle soluzioni calcolate con Cramer
+
+            /*
+             per ogni incognita:
+                - Sostituisce i termini noti alla colonna dei coefficienti dell'incognita
+                   calcolo di Dxi
+                - Calcola il rapporto del determinante della matrice con i coefficienti
+                   sostituiti e del determinante della matrice dei coefficienti originale
+                   xi = Dxi / D
+             */
+
             return null;
         }
 
         static float[,] sostituisciColonna(float[,] matrice, float[] colonnaNuova, int indiceColonnaDaSostituire)
         {
-            // restituisce una NUOVA matrice con la colonna sostituita
+            // TODO: restituisce una NUOVA matrice con la colonna sostituita
             return null;
         }
 
         static float calcolaDeterminante(float[,] matrice)
         {
-            // restituisce il determinante della matrice
+            // TODO: restituisce il determinante della matrice
             return 0f;
         }
     }

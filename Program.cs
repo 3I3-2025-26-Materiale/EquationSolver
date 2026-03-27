@@ -63,12 +63,17 @@ namespace EquationSolver
 
             soluzioni = risolvi(coefficienti, terminiNoti);
 
-            // TODO: gestire il caso in cui il sistema non è risolvibile
-            // (es.: array soluzioni vuoto)
-            Console.WriteLine("Soluzione del sistema:");
-            for (int i = 0; i < soluzioni.Length; i++)
+            if (soluzioni == null || soluzioni.Length == 0)
             {
-                Console.WriteLine($"x{i + 1} = {soluzioni[i]}");
+                Console.WriteLine("Il sistema non è risolvibile");
+            }
+            else
+            {
+                Console.WriteLine("Soluzione del sistema:");
+                for (int i = 0; i < soluzioni.Length; i++)
+                {
+                    Console.WriteLine($"x{i + 1} = {soluzioni[i]}");
+                }
             }
                 
             Console.ReadLine();
@@ -152,30 +157,124 @@ namespace EquationSolver
 
         static float[] risolvi(float[,] coefficienti, float[] terminiNoti)
         {
-            // TODO: restituisce l'array delle soluzioni calcolate con Cramer
+            // controllo degli errori sulle dimensioni delle matrici:
+            // il sistema è risolvibile solo se coefficienti è quadrata
+            // e se terminiNoti ha dimensione pari all'ordine di coerfficienti
+            if (coefficienti != null && terminiNoti != null
+                && coefficienti.GetLength(0) == coefficienti.GetLength(1)
+                && coefficienti.GetLength(0) == terminiNoti.Length)
+            {
+                /*
+                 per ogni incognita:
+                    - Sostituisce i termini noti alla colonna dei coefficienti dell'incognita
+                       calcolo di Dxi
+                    - Calcola il rapporto del determinante della matrice con i coefficienti
+                       sostituiti e del determinante della matrice dei coefficienti originale
+                       xi = Dxi / D
+                 */
+                int numeroIncognite = terminiNoti.Length;
+                float[] soluzione = new float[numeroIncognite];
+                float denominatore = calcolaDeterminante(coefficienti);
 
-            /*
-             per ogni incognita:
-                - Sostituisce i termini noti alla colonna dei coefficienti dell'incognita
-                   calcolo di Dxi
-                - Calcola il rapporto del determinante della matrice con i coefficienti
-                   sostituiti e del determinante della matrice dei coefficienti originale
-                   xi = Dxi / D
-             */
+                if (Math.Abs(denominatore) > 0.001) // se il denominatore non è 0, il sistema è risolvibile
+                {
+                    for (int i = 0; i < numeroIncognite; i++)
+                    {
+                        float[,] coefficientiMod = sostituisciColonna(coefficienti, terminiNoti, i);
+                        float numeratore = calcolaDeterminante(coefficientiMod);
+                        float soluzioneIncognita = numeratore / denominatore;
+                        soluzione[i] = soluzioneIncognita;
+                    }
+                    return soluzione;
+                }
+            }
 
             return null;
         }
 
         static float[,] sostituisciColonna(float[,] matrice, float[] colonnaNuova, int indiceColonnaDaSostituire)
         {
-            // TODO: restituisce una NUOVA matrice con la colonna sostituita
+            // creo una NUOVA matrice di dimensioni pari a quella originale,
+            // per non sostituire la colonna sulla matrice originale, che deve
+            // invece rimanere invariata, altrimenti i conti successivi avrebbero
+            // errore.
+            if (matrice != null)
+            {
+                float[,] risultato = new float[matrice.GetLength(0), matrice.GetLength(1)];
+
+                for (int i = 0; i < risultato.GetLength(0); i++)
+                {
+                    for (int j = 0; j < risultato.GetLength(1); j++)
+                    {
+                        if (j == indiceColonnaDaSostituire)
+                        {
+                            // se la colonna è quella da sostituire,
+                            // inserisco un valore preso dalla nuova colonna
+                            if (colonnaNuova != null && i < colonnaNuova.Length)
+                            {
+                                risultato[i, j] = colonnaNuova[i];
+                            }
+                            else
+                            {
+                                risultato[i, j] = matrice[i, j];
+                            }
+                        }
+                        else
+                        {
+                            // altrimenti, ricopio il valore vecchio
+                            risultato[i, j] = matrice[i, j];
+                        }
+                    }
+                }
+
+                return risultato;
+            }
+
             return null;
         }
 
         static float calcolaDeterminante(float[,] matrice)
         {
-            // TODO: restituisce il determinante della matrice
-            return 0f;
+            // il calcolo del determinante ha senso solo su matrici quadrate
+            if (matrice != null
+                && matrice.GetLength(0) == matrice.GetLength(1))
+            {
+                if (matrice.GetLength(0) == 1)
+                {
+                    return matrice[0, 0];
+                }
+                else if (matrice.GetLength(0) == 2)
+                {
+                    return matrice[0, 0] * matrice[1, 1] - matrice[0, 1] * matrice[1, 0];
+                }
+                else if (matrice.GetLength(0) == 3)
+                {
+                    /*
+                    return matrice[0, 0] * matrice[1, 1] * matrice[2, 2]
+                         + matrice[0, 1] * matrice[1, 2] * matrice[2, 0]
+                         + matrice[0, 2] * matrice[1, 0] * matrice[2, 1]
+                         - matrice[0, 2] * matrice[1, 1] * matrice[2, 0]
+                         - matrice[0, 0] * matrice[1, 2] * matrice[2, 1]
+                         - matrice[0, 1] * matrice[1, 0] * matrice[2, 2]
+                    ;
+                    */
+
+                    float risultato = 0;
+                    for (int j = 0; j < 3; j++)
+                    {
+                        float diagonale1 = 1;
+                        float diagonale2 = 1;
+                        for (int i = 0; i < 3; i++)
+                        {
+                            diagonale1 *= matrice[i, (j + i + 3) % 3];
+                            diagonale2 *= matrice[i, (j - i + 3) % 3];
+                        }
+                        risultato += diagonale1 - diagonale2;
+                    }
+                    return risultato;
+                }
+            }
+            return 0f; // 0 è un valore valido, sarebbe meglio lanciare eccezione...
         }
     }
 }

@@ -37,30 +37,40 @@ namespace EquationSolver
 
             float[] soluzioni = new float[nIncognite];
 
-            bool inserimentoRiuscito = inserisciSistemaEquazioni(coefficienti, terminiNoti);
-            if (inserimentoRiuscito)
+            bool inserimentoRiuscito = false;
+            while (!inserimentoRiuscito)
             {
-                Console.WriteLine();
-                Console.WriteLine("Hai inserito il seguente sistema di equazioni:");
-                stampaSistemaEquazioni(coefficienti, terminiNoti);
-
-                // TODO: chiedere all'utente se il sistema gli piace o no: in caso negativo si reinserisce.
-
-                soluzioni = risolvi(coefficienti, terminiNoti);
-
-                // TODO: gestire il caso in cui il sistema non è risolvibile
-                // (es.: array soluzioni vuoto)
-                Console.WriteLine("Soluzione del sistema:");
-                for (int i = 0; i < soluzioni.Length; i++)
+                inserimentoRiuscito = inserisciSistemaEquazioni(coefficienti, terminiNoti);
+                if (inserimentoRiuscito)
                 {
-                    Console.WriteLine($"x{i + 1} = {soluzioni[i]}");
+                    Console.WriteLine();
+                    Console.WriteLine("Hai inserito il seguente sistema di equazioni:");
+                    stampaSistemaEquazioni(coefficienti, terminiNoti);
+
+                    Console.WriteLine();
+                    Console.Write("Confermi l'inserimento delle equazioni [S/N]? :");
+
+                    if (Console.ReadLine().ToLower() != "s")
+                    {
+                        inserimentoRiuscito = false;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("ERRORE DI PROGRAMMAZIONE: Le matrici non hanno una dimensione coerente.");
                 }
             }
-            else
-            {
-                Console.WriteLine("ERRORE DI PROGRAMMAZIONE: Le matrici non hanno una dimensione coerente.");
-            }
 
+            soluzioni = risolvi(coefficienti, terminiNoti);
+
+            // TODO: gestire il caso in cui il sistema non è risolvibile
+            // (es.: array soluzioni vuoto)
+            Console.WriteLine("Soluzione del sistema:");
+            for (int i = 0; i < soluzioni.Length; i++)
+            {
+                Console.WriteLine($"x{i + 1} = {soluzioni[i]}");
+            }
+                
             Console.ReadLine();
         }
 
@@ -117,9 +127,21 @@ namespace EquationSolver
                     // il segno - viene aggiunto direttamente dalla conversione in stringa
                     // del coefficiente stesso.
 
-                    // TODO: gestire i coefficienti 0 e 1 per una stampa pulita
-
-                    equazione += $"{segno}{coefficiente}x{indiceIncognita+1} ";
+                    // se il coefficiente non è 0 (gestendo l'errore di approssimazione dei float)
+                    // mostro il termine
+                    if (Math.Abs(coefficiente) < 0.001)
+                    {
+                        // mostro il coefficiente solo se è diverso da 1
+                        // (gestendo l'errore di approssimazione dei float)
+                        if (Math.Abs(coefficiente - 1) < 0.001)
+                        {
+                            equazione += $"{segno}x{indiceIncognita + 1} ";
+                        }
+                        else
+                        {
+                            equazione += $"{segno}{coefficiente}x{indiceIncognita + 1} ";
+                        }
+                    }
                 }
 
                 equazione += "= " + terminiNoti[indiceEquazione];
